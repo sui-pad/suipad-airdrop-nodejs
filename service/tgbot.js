@@ -11,7 +11,7 @@ async function checkHasJoinTgGroup(wallet_address, groupId) {
             return 1;
         }
 
-        [results,] = await connection.query("SELECT * FROM sys_users WHERE wallet_address = ?", [wallet_address]);
+        [results,] = await connection.query("SELECT * FROM users WHERE wallet_address = ?", [wallet_address]);
         console.log(`${wallet_address} tg_id: ${results[0].tg_id}`)
         if (results.length > 0 && results[0].tg_id) {
             const tg_id = results[0].tg_id;
@@ -47,7 +47,7 @@ getBot().on('message', async (msg) => {
             return
         }
         const walletAddress = msg.text.replace("/start ", "");
-        let [results,]=await connection.query("select * from sys_users where wallet_address=?",[walletAddress]);
+        let [results,]=await connection.query("select * from users where wallet_address=?",[walletAddress]);
         if (results.length===0){
             console.log("wallet not exists:",walletAddress);
             return
@@ -58,7 +58,7 @@ getBot().on('message', async (msg) => {
         }
         const tg_id = msg.chat.id.toString();
         console.log(`${walletAddress} connect tg ${tg_id} success`);
-        await connection.query("update sys_users set tg_id=? where wallet_address=?",[tg_id,walletAddress]);
+        await connection.query("update users set tg_id=? where wallet_address=?",[tg_id,walletAddress]);
     }finally {
         if (connection){
             releaseConnection(connection)

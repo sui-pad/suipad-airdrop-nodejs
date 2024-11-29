@@ -69,7 +69,7 @@ async function queryDrawChances(walletAddress){
     let connection;
     try{
         connection=await getConnection();
-        const [results,]=await connection.query("select COUNT(1) finishCount from sys_users u,task_progress g where u.father_wallet_address=? and u.wallet_address=g.wallet_address and g.finished=1",[walletAddress]);
+        const [results,]=await connection.query("select COUNT(1) finishCount from users u,task_progress g where u.father_wallet_address=? and u.wallet_address=g.wallet_address and g.finished=1",[walletAddress]);
         let count=Number(results[0].finishCount);
         const drawChances = Math.floor(count / 10);
         return drawChances;
@@ -91,7 +91,7 @@ async function autoUpdateTask(step,jobId,walletAddress){
             const points=results[0].points;
             if (type==="connect_twitter"){
                 // console.log("auto check connect_twitter");
-                [results,]=await connection.query("select * from sys_users where wallet_address=?",[walletAddress]);
+                [results,]=await connection.query("select * from users where wallet_address=?",[walletAddress]);
                 if (results.length>0 && results[0].twitter_id){
                     await finishByStep(step,jobId,walletAddress,points);
                     return 1;

@@ -12,7 +12,7 @@ twitter_app.get('/oauth_url', isAuthenticated,async (req, res) => {
     try {
         connection=await getConnection();
         const addr = req.session.wallet.addr;
-        let [results,]=await connection.query("select * from sys_users where wallet_address=?",[addr]);
+        let [results,]=await connection.query("select * from users where wallet_address=?",[addr]);
         if (results.length>0 && results[0].twitter_id){
             console.log(`${addr} had connect twitter ${results[0].twitter_id}`);
             return sendSuccessData(res, {  });
@@ -72,18 +72,18 @@ twitter_app.get('/xoauth', async (req, res) => {
 
         let message="success";
         const walletAddr=await client.get("oauth_token_wallet:" + oauthToken);
-        let [results,]=await connection.query("select * from sys_users where wallet_address=?",[walletAddr]);
+        let [results,]=await connection.query("select * from users where wallet_address=?",[walletAddr]);
         if (results.length>0 && results[0].twitter_id){
             message=`${addr} had connect twitter ${results[0].twitter_id}`
             console.log(message);
         }else {
-            [results,]=await connection.query("select * from sys_users where twitter_id=?",[userId]);
+            [results,]=await connection.query("select * from users where twitter_id=?",[userId]);
             if (results.length>0 && results[0].twitter_id){
                 message=`${userId} has connected by wallet ${results[0].wallet_address},new wallet:${walletAddr}`
                 console.log(message);
             }else {
                 console.log(`${walletAddr} connect twitter success ${userId}`);
-                await connection.query("update sys_users set twitter_id=? where wallet_address=?",[userId,walletAddr]);
+                await connection.query("update users set twitter_id=? where wallet_address=?",[userId,walletAddr]);
             }
         }
         const redirectUrl = twitterApiConfig.redirectUrl+message;

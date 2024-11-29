@@ -24,15 +24,16 @@ user_app.get('/login', async (req ,res) => {
 
         // 钱包db查询
         connection = await getConnection();
-        const [resultRows, ] = await connection.query("select * from sys_users where wallet_address = ?", [addr]);
+        const [resultRows, ] = await connection.query("select * from users where wallet_address = ?", [addr]);
         if (resultRows.length > 0) {
             req.session.wallet = { addr };
+            req.sessionStore.set(addr, { addr });
             return sendSuccessResponse(res);
         }
 
         let fatherWallet="";
         if (code) {
-            const [codeRows, ] = await connection.query("select * from sys_users where invite_code = ?", [code]);
+            const [codeRows, ] = await connection.query("select * from users where invite_code = ?", [code]);
             if (codeRows.length > 0) {
                 fatherWallet = codeRows[0].wallet_address;
             }
@@ -69,7 +70,7 @@ user_app.get('/sui_login', async (req ,res) => {
 
         // 钱包db查询
         connection = await getConnection();
-        const [resultRows, ] = await connection.query("select * from sys_users where wallet_address = ?", [addr]);
+        const [resultRows, ] = await connection.query("select * from users where wallet_address = ?", [addr]);
         if (resultRows.length > 0) {
             req.session.wallet = { addr };
             return sendSuccessResponse(res);
@@ -77,7 +78,7 @@ user_app.get('/sui_login', async (req ,res) => {
 
         let fatherWallet="";
         if (code) {
-            const [codeRows, ] = await connection.query("select * from sys_users where invite_code = ?", [code]);
+            const [codeRows, ] = await connection.query("select * from users where invite_code = ?", [code]);
             if (codeRows.length > 0) {
                 fatherWallet = codeRows[0].wallet_address;
             }
@@ -133,12 +134,12 @@ user_app.get('/info',isAuthenticated, async (req ,res) => {
         connection=await getConnection();
         const addr = req.session.wallet.addr;
         const jobId = req.query.jobId;
-        let [resultRows, ] = await connection.query("select * from sys_users where wallet_address = ?", [addr]);
+        let [resultRows, ] = await connection.query("select * from users where wallet_address = ?", [addr]);
         let inviteCode;
         if (resultRows.length > 0) {
             inviteCode=resultRows[0].invite_code;
         }
-        [resultRows, ] = await connection.query("select count(1) count from sys_users where father_wallet_address = ?", [addr]);
+        [resultRows, ] = await connection.query("select count(1) count from users where father_wallet_address = ?", [addr]);
         return sendSuccessData(res,{walletAddress:addr,inviteCode,inviteCount:resultRows[0].count});
     }finally {
         if (connection){

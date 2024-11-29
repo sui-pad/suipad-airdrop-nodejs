@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node service/app.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
     "node-telegram-bot-api": "^0.65.1",
     "redis": "^4.6.13",
     "twitter-api-v2": "^1.16.4",
-    "web3": "^4.8.0"
+    "web3": "^4.8.0",
+    "web3-utils": "^4.3.2"
   }
 }
