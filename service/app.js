@@ -12,7 +12,7 @@ import claim_app from "./claim_app.js";
 import discord_app from "./discord_app.js";
 
 const app = express();
-const port = 9000;
+const port = 9001;
 
 app.use(express.json());
 app.use(cors({
@@ -29,8 +29,8 @@ app.use(session({
     resave: false,
     name: 'airdrop', // 自定义cookie的名称
     cookie: {
-        domain: domain,
-        maxAge: 3600000 // 会话有效期，单位为毫秒，此处设置为1小时
+        domain: domain, 
+        maxAge: 3600000, // 会话有效期，单位为毫秒，此处设置为1小时
     }
 }));
 
