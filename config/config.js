@@ -1,5 +1,5 @@
-const domain="localhost";
-const crosHost=['http://airdrop.jyczg888.uk','https://airdrop.jyczg888.uk','https://airdrop.suipad.xyz', 'http://localhost:4002'];
+const domain="uat-airdrop.devbase.cloud";
+const crosHost=['http://airdrop.jyczg888.uk','https://airdrop.jyczg888.uk','https://airdrop.suipad.xyz', 'https://uat-airdrop.devbase.cloud'];
 const twitterApiConfig={
     apiKey:"I8eJa09GgTTYzrsPBIYJlS5Pl",
     apiKeySecret:"i5GoNVaeatyRQ5eaOLTxFYuapKLmFWAxEuHE65AmkNl6MFdcNM",
