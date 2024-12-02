@@ -8,18 +8,17 @@ const DISCORD_TOKEN_URL = 'https://discord.com/api/oauth2/token'
 const DISCORD_API_URL = 'https://discord.com/api/users/@me'
 const discordCallbackUrl="https%3A%2F%2Fapiairdrop.suipad.xyz%2Fdiscord%2Fdoauth"
 const discordCallbackUrlNotEncode="https://apiairdrop.suipad.xyz/discord/doauth"
-const botToken="MTIxNzExMTI4MTEwNjk0NDExMQ.GpbQ_W.P6GyzQZ47M3lxvONAj1XS6pq0Qq1mr5Rk3fgzs"
 const botOauthUrl="https://discord.com/oauth2/authorize?client_id=1217111281106944111&permissions=8&scope=bot";
 let discord;
 
 async function initDiscordClient(){
-    // discord = new Client({
-    //     intents: [
-    //         GatewayIntentBits.Guilds,
-    //         GatewayIntentBits.GuildMembers,
-    //     ]
-    // });
-    // await discord.login(botToken);
+    discord = new Client({
+        intents: [
+            GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildMembers,
+        ]
+    });
+    await discord.login("");
 }
 function getDiscordOauthUrl(redirect){
     const Oauth_URI=`https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${redirect}&scope=identify`
@@ -73,7 +72,7 @@ async function discordCallback(code,walletAddress){
         if (userResponse.data.id){
             const userDiscordId=userResponse.data.id;
             const username=userResponse.data.username;
-            connection.query("update users set dc_id=?,dc_user_name=? where wallet_address=? and dc_id is null",[userDiscordId,username,walletAddress]);
+            connection.query("update sys_users set dc_id=?,dc_user_name=? where wallet_address=? and dc_id is null",[userDiscordId,username,walletAddress]);
         }
     } catch (error) {
         console.error('Failed to exchange Discord code for token:', error);
@@ -89,7 +88,7 @@ async function checkHasJoinDcServer( addr, serverId) {
     let connection;
     try{
         connection=await getConnection();
-        let [resultRows,] = await connection.query("select * from users where wallet_address = ?", [addr]);
+        let [resultRows,] = await connection.query("select * from sys_users where wallet_address = ?", [addr]);
         if (resultRows.length === 0) {
             return 0;
         }
