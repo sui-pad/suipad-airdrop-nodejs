@@ -72,7 +72,7 @@ async function discordCallback(code,walletAddress){
         if (userResponse.data.id){
             const userDiscordId=userResponse.data.id;
             const username=userResponse.data.username;
-            connection.query("update sys_users set dc_id=?,dc_user_name=? where wallet_address=? and dc_id is null",[userDiscordId,username,walletAddress]);
+            connection.query("update users set dc_id=?,dc_user_name=? where wallet_address=? and dc_id is null",[userDiscordId,username,walletAddress]);
         }
     } catch (error) {
         console.error('Failed to exchange Discord code for token:', error);
@@ -88,7 +88,7 @@ async function checkHasJoinDcServer( addr, serverId) {
     let connection;
     try{
         connection=await getConnection();
-        let [resultRows,] = await connection.query("select * from sys_users where wallet_address = ?", [addr]);
+        let [resultRows,] = await connection.query("select * from users where wallet_address = ?", [addr]);
         if (resultRows.length === 0) {
             return 0;
         }
